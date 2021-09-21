@@ -17,4 +17,11 @@
                     name: user.name
                     scope: global
                     value: 'Sean Matheny'
+          - name: git default editor
+            community.general.git_config:
+                    name: core.editor
+                    scope: global
+                    value: 'vim'
+           
+
 
