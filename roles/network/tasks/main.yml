@@ -17,6 +17,27 @@
     - name: ensure module is loaded 
       command: modprobe bonding
     
+    - name: unmask networking
+      command: systemctl unmask networking
+
+    - name: enable networking
+      command: systemctl enable networking
+    
+    - name: stop old service
+      command: systemctl stop systemd-networkd.socket networkd.dispatcher systemd-networkd-wait-online 
+      ignore_errors: true
+
+    - name: disable old service
+      command: systemctl disable systemd-networkd.socket networkd.dispatcher systemd-networkd-wait-online 
+      ignore_errors: true
+
+    - name: mask old service
+      command: systemctl mask systemd-networkd.socket networkd.dispatcher systemd-networkd-wait-online 
+      ignore_errors: true
+
+    - name: remove netplan packages
+      command: apt-get --assume-yes purge nplan netplan.io
+
     - name: ensure modules file has bonding
       ansible.builtin.lineinfile:
         path: /etc/modules

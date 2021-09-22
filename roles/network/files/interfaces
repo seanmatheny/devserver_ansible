@@ -3,7 +3,6 @@ iface lo inet loopback
 
 auto bond0
 iface bond0 inet manual
-    mtu 9000
     bond-mode 4
     bond-miimon 100
     bond-lacp-rate 1
@@ -17,6 +16,7 @@ iface br1 inet static
     address 10.0.0.100
     netmask 255.255.225.0
     broadcast 10.0.0.255
+    gateway 10.0.0.1
     dns-nameservers 10.0.0.1 8.8.8.8
     bridge_ports bond0
     bridge_stp off
