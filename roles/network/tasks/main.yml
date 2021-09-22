@@ -1,6 +1,6 @@
 ---
 - name: See if ifupdown is installed
-  command: apt list --installed | grep ifupdown
+  command: dpkg -l ifupdown
   register: apt_check
   ignore_errors: true
 
@@ -24,19 +24,19 @@
       command: systemctl enable networking
     
     - name: stop old service
-      command: systemctl stop systemd-networkd.socket networkd.dispatcher systemd-networkd-wait-online 
+      command: systemctl stop systemd-networkd.socket networkd.dispatcher systemd-networkd-wait-online network-manager 
       ignore_errors: true
 
     - name: disable old service
-      command: systemctl disable systemd-networkd.socket networkd.dispatcher systemd-networkd-wait-online 
+      command: systemctl disable systemd-networkd.socket networkd.dispatcher systemd-networkd-wait-online network-manager
       ignore_errors: true
 
     - name: mask old service
-      command: systemctl mask systemd-networkd.socket networkd.dispatcher systemd-networkd-wait-online 
+      command: systemctl mask systemd-networkd.socket networkd.dispatcher systemd-networkd-wait-online network-manager
       ignore_errors: true
 
     - name: remove netplan packages
-      command: apt-get --assume-yes purge nplan netplan.io
+      command: apt-get --assume-yes purge nplan netplan.io network-manager
 
     - name: ensure modules file has bonding
       ansible.builtin.lineinfile:

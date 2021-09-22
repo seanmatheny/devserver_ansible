@@ -14,7 +14,7 @@ iface bond0 inet manual
 auto br1
 iface br1 inet static
     address 10.0.0.100
-    netmask 255.255.225.0
+    netmask 255.255.255.0
     broadcast 10.0.0.255
     gateway 10.0.0.1
     dns-nameservers 10.0.0.1 8.8.8.8
