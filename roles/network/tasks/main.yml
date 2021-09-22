@@ -1,0 +1,31 @@
+---
+- name: See if ifupdown is installed
+  command: apt list --installed | grep ifupdown
+  register: apt_check
+  ignore_errors: true
+
+- block:
+    - name: install ifupdown
+      apt: pkg=ifupdown state=present
+
+    - name: install ifenslave
+      apt: pkg=ifenslave state=present
+
+    - name: install ifenslave
+      apt: pkg=ifenslave state=present
+
+    - name: ensure module is loaded 
+      command: modprobe bonding
+    
+    - name: ensure modules file has bonding
+      ansible.builtin.lineinfile:
+        path: /etc/modules
+        line: bonding
+        create: yes
+  when: apt_check is failed
+
+- name: install ifenslave
+  apt: pkg=ifenslave state=present
+
+- name: make sure interfaces file is current update if it is different
+  copy: src=interfaces dest=/etc/network/interfaces force=yes

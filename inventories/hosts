@@ -1,2 +1,5 @@
 [base]
 localhost
+
+[seed_hypervisor]
+seedhyp
