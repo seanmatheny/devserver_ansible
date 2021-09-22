@@ -21,32 +21,39 @@
       command: systemctl unmask networking
 
     - name: enable networking
-      command: systemctl enable networking
-    
+      command: systemctl enable networking  
+
     - name: stop old service
-      command: systemctl stop systemd-networkd.socket networkd.dispatcher systemd-networkd-wait-online network-manager 
+      command: systemctl stop systemd-networkd.socket networkd.dispatcher systemd-networkd-wait-online network-manager systemd-resolved
       ignore_errors: true
 
     - name: disable old service
-      command: systemctl disable systemd-networkd.socket networkd.dispatcher systemd-networkd-wait-online network-manager
+      command: systemctl disable systemd-networkd.socket networkd.dispatcher systemd-networkd-wait-online network-manager systemd-resolved
       ignore_errors: true
 
     - name: mask old service
-      command: systemctl mask systemd-networkd.socket networkd.dispatcher systemd-networkd-wait-online network-manager
+      command: systemctl mask systemd-networkd.socket networkd.dispatcher systemd-networkd-wait-online network-manager systemd-resolved
       ignore_errors: true
 
     - name: remove netplan packages
       command: apt-get --assume-yes purge nplan netplan.io network-manager
+
+    - name: remove old systemd-resolved resolv.conf symlink
+      file: path='/etc/resolv.conf' state=absent
 
     - name: ensure modules file has bonding
       ansible.builtin.lineinfile:
         path: /etc/modules
         line: bonding
         create: yes
+  
   when: apt_check is failed
 
 - name: install ifenslave
   apt: pkg=ifenslave state=present
+  
+- name: ensure new resolv.conf file
+  copy: src=resolv.conf dest=/etc/resolv.conf force=yes
 
 - name: make sure interfaces file is current update if it is different
   copy: src=interfaces dest=/etc/network/interfaces force=yes
